@@ -11,5 +11,8 @@
   "license": "ISC",
   "bin": {
     "tme": "index.js"
+  },
+  "dependencies": {
+    "git": "^0.1.5"
   }
 }

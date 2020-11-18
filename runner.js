@@ -1,14 +1,19 @@
-//The runner class is going to be responsible for collecting all of the files that have .test in their filename. It will then use some function that sets up our environment to do testing. Finally, it will go through and run our test files one by one.
+//We want to use File Systems' file and directory reading functions for our collectFiles function
+const fs = require('fs')
+
 class Runner {
     constructor() {
-        //One thing we know we'll need to do is collect all of the files that have .test in their filename, so for now we create a this.files array in our constructor that will store all of our files that we find
         this.files = [];
     }
-    //In relation to the above, we know we'll need a function / method for collecting all of the files.
-    collectFiles() {
+    //We make collectFiles async so that we can use the promised-based version of fs.readdir
+    //We also pass through our targetPath
+    async collectFiles(targetPath) {
+        //We make our files variable equal to the readdir() function and then return the files
+        const files = fs.promises.readdir(targetPath)
 
+        return files;
     }
 }
 
-//At the end, we make sure we export out our Runner class to be used
+
 module.exports = Runner;
