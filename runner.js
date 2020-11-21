@@ -1,7 +1,9 @@
 const fs = require('fs')
 const path = require('path')
-//Color-code my error messages using Chalk
 const chalk = require('chalk')
+
+//We create an array of forbidden directories that we don't want our testing framework to check. Typically, this will include node-modules
+const forbiddenDirs = ['node_modules']
 
 class Runner {
     constructor() {
@@ -42,9 +44,9 @@ class Runner {
             const filepath = path.join(targetPath, file)
             const stats = await fs.promises.lstat(filepath);
             if(stats.isFile() && file.includes('.test.js')) {
-                //We add a shortName property so when we print the file name before a test, we don't do the super long path
                 this.testFiles.push({name : filepath, shortName : file})
-            } else if(stats.isDirectory()) {
+                //Not only must the file be a directory for us to look into it, now it much not be in our list of forbidden directories
+            } else if(stats.isDirectory() && !forbiddenDirs.includes(file)) {
                 const childFiles = await fs.promises.readdir(filepath)
 
                 files.push(...childFiles.map(f => path.join(file, f)));
