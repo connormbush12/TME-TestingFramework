@@ -8,22 +8,29 @@ class Runner {
 
     async runTests() {
         for (let file of this.testFiles) {
-            //We create two global properties that we can use throughout Node JS - beforeEach and it. These mirror what they use for Mocha
-
-            //beforeEach sets up our code before each new test. To do this, we create an empty array and then push a function into it
             const beforeEaches = [];
             global.beforeEach = (fn) => {
                 beforeEaches.push(fn)
             }
             
-            //it is what runs our tests. It gives a description and a function
             global.it = (desc, fn) => {
-                //First, we execute every function in our beforeEaches array, which simulates beforeEach from Mocha
                 beforeEaches.forEach(func => func())
-                //Now that the code is set up, we run the test function we passed through
-                fn();
+                //Add try and catch blocks for error handling
+                try {
+                    fn();
+                    console.log(`OK - ${desc}`)
+                } catch(err) {
+                    console.log(`X - ${desc}`)
+                    //To make this a little easier to read, we indent it with a tab (\t) and only print the error message, not the whole error
+                    console.log('\t', err.message)
+                }
             }
-            require(file.name)
+            //We could also have an error requiring in our file as well
+            try {
+                require(file.name)
+            } catch(err) {
+                console.log(err)
+            }
         }
     }
 
