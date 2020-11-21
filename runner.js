@@ -1,5 +1,4 @@
 const fs = require('fs')
-//Gotta require in path to use path.join
 const path = require('path')
 
 class Runner {
@@ -7,10 +6,23 @@ class Runner {
         this.testFiles = [];
     }
 
-    //Now, we add a new method on our class to run our test files
     async runTests() {
         for (let file of this.testFiles) {
-            //We require in our test file so that it is executed within this loop. In our collectFiles method, we push in the new files as an object with a name property that directs to their absolute file path
+            //We create two global properties that we can use throughout Node JS - beforeEach and it. These mirror what they use for Mocha
+
+            //beforeEach sets up our code before each new test. To do this, we create an empty array and then push a function into it
+            const beforeEaches = [];
+            global.beforeEach = (fn) => {
+                beforeEaches.push(fn)
+            }
+            
+            //it is what runs our tests. It gives a description and a function
+            global.it = (desc, fn) => {
+                //First, we execute every function in our beforeEaches array, which simulates beforeEach from Mocha
+                beforeEaches.forEach(func => func())
+                //Now that the code is set up, we run the test function we passed through
+                fn();
+            }
             require(file.name)
         }
     }
