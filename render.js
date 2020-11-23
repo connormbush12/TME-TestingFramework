@@ -4,7 +4,7 @@ const path = require('path')
 const jsdom = require('jsdom')
 const {JSDOM} = jsdom
 
-const render = (filename) => {
+const render = async (filename) => {
     //The file path is the current working directory joined with the individual filename
     const filePath = path.join(process.cwd(), filename)
 
